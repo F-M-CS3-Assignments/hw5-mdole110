@@ -111,11 +111,50 @@ void UpdateTest() {
 	
 	cout << "PASSED!" << endl;
 }
+//Test ToString()
+void testToString(){
+	cout << "Testing ToString()" << endl;
+	BetterPriorityQueue bpq;
+	BPQNode node1;
+	node1.gnode = 1;
+	node1.pri = 0;
+	bpq.push(node1);
+
+	BPQNode node2;
+	node2.gnode = 2;
+	node2.pri =1;
+	bpq.push(node2);
+
+	string stringbpq = bpq.ToString();
+	//cout << stringbpq << endl;
+	assert(stringbpq == "[(1, pri: 0), (2, pri: 1)]");
+	cout << "PASSED!" << endl;
+
+}
+
+//test struct to string
+void TestStructToString(){
+	cout << "Testing BPQNodeToString()..." << endl;
+	BetterPriorityQueue bpq;
+	BPQNode node1;
+	node1.gnode = 1;
+	node1.pri= 0;
+	bpq.push(node1);
+
+	string StructString = BetterPriorityQueue::BPQNodeToString(node1); //bc declared static 
+	assert(StructString == "(1, 0)");
+	cout << "PASSED!!" << endl;
+
+
+}
 
 int main(){
 	
 	ContainsTest();
 	UpdateTest();
+	testToString();
+	TestStructToString();
+
 	
 	cout << "ALL TESTS PASSED!!" << endl;
 	

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-
+//add something in case there's an empty graph?
 
 void TestAddNode(){
 	cout << "Testing AddNode..." << endl;
@@ -14,16 +14,16 @@ void TestAddNode(){
 
 
 	g.AddNode(15);
-	//cout << "nodes: " << g.NodesToString() << endl;
+	cout << "nodes: " << g.NodesToString() << endl;
 	assert(g.NodesToString() == "[(15)]");
 
 
 	g.AddNode(12);
-	//cout << "nodes: " << g.NodesToString() << endl;
+	cout << "nodes: " << g.NodesToString() << endl;
 	assert(g.NodesToString() == "[(15), (12)]");
 
 	
-	try
+	try // don't allow duplicate node?
 	{
 		g.AddNode(12);
 		assert(false);
@@ -181,6 +181,20 @@ void TestDestructor(){
 	
 	cout << "NO ERRORS.  Use valgrind to check!" << endl << endl;
 }
+void TestSize(){
+	cout << "Testing size..." << endl;
+	Graph *g = new Graph();
+
+	g->AddNode(3);
+	g->AddNode(5);
+	g->AddEdge(3, 5, 15); // added one edge (between 3 and 5 with weight 15)
+
+	size_t edgeCount = g->Size(); //the function counts edges (connections between two nodes) so is actual size edges +1?
+	size_t ans = 1;
+	assert(edgeCount == ans);
+	cout << "PASSED!"<< endl;
+
+}
 
 
 
@@ -192,6 +206,7 @@ int main(){
 	TestGetOutwardEdgesFrom();
 	TestGetNodes();
 	TestDestructor();
+	TestSize();
 
 	
 	cout << "ALL TESTS PASSED!" << endl;

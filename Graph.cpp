@@ -7,12 +7,17 @@
 using namespace std;
 
 
+//vector "nodes" will collect a set of vertices
+//vector "adjList" will collect edges (vector of vectors whose elements are GraphEdge pointers to GraphEdge struct objects)
 
+/*
+REMINDERS:
+- FILL IN GRAPH::~GRAPH METHODS
 
-
+*/
 
 // This method is not part of the Graph class / header on purpose
-const GraphEdge* findExistingEdge(nodekey_t gnFrom, nodekey_t gnTo, vector<vector<GraphEdge *>> adjList)
+const GraphEdge* findExistingEdge(nodekey_t gnFrom, nodekey_t gnTo, vector<vector<GraphEdge *> > adjList)
 {
 	if(adjList.size() == 0)
 	{
@@ -61,17 +66,22 @@ void Graph::AddNode(nodekey_t key)
 
 
 	nodes.push_back(key);
-	vector <GraphEdge*> *newRow = new vector<GraphEdge*>;
+	vector <GraphEdge*> *newRow = new vector<GraphEdge*>; //now each is j a GraphEdge* pointer since we are just adding vertices, not edges yet
 	adjList.push_back(*newRow);
-	delete newRow; // ?
+	delete newRow; //?
 }
 
 
 
 
-const GraphEdge *Graph::AddEdge(nodekey_t gnFrom, nodekey_t gnTo, unsigned int w)
-{
+const GraphEdge *Graph::AddEdge(nodekey_t gnFrom, nodekey_t gnTo,  unsigned int w)
 
+{
+	//check for negatives
+	if(static_cast<int>(w) <0){
+		throw invalid_argument("Edge weights must be positive numbers.");
+		
+	}
 	// The AddEdge method creates new edges.  It does not and should not update / change
 	// the weights of existing edges.  findExistingEdge does not check the weight for this reason
 	const GraphEdge* dup = findExistingEdge(gnFrom, gnTo, this->adjList);
@@ -90,10 +100,26 @@ const GraphEdge *Graph::AddEdge(nodekey_t gnFrom, nodekey_t gnTo, unsigned int w
 		throw invalid_argument("No such node: " + to_string(gnTo));
 	}
 
-	GraphEdge *ge = new GraphEdge;
 
-	// TODO:
+	GraphEdge *ge = new GraphEdge;
+	//set up from, to, and weight here?
+	ge->from = gnFrom;
+	ge->to = gnTo;
+	ge->weight = w;
+
+	for(size_t i=0; i < nodes.size(); i++){
+		if(nodes.at(i) == gnFrom){
+			adjList.at(i).push_back(ge);
+		}
+	}
+
+	// TODO: ^^done aboce 
 	// Do stuff here?  IDK what though
+	//go thru all adjacent lists to check which one is corresponding to the from
+	//vertex of the edge. Then, add the pointer to the edge to the end of the related vector
+	//aka for i=0 to nodes.size()
+	//if nodes.at(i) = same as from vertex 
+	//add pointer ge to the end of the vector adjList.at(i)
 
 	const GraphEdge *response = ge; // this helps the compiler go
 	return response;
@@ -104,6 +130,14 @@ bool Graph::IsPresent(nodekey_t key) const
 {
 	// TODO:
 	// iterate through this->nodes and look for one that matches key
+	bool IsPresent = false;
+	for(size_t i =0; i<this->nodes.size(); i++){
+		if(this-> nodes.at(i) == key){
+			IsPresent = true;
+		}
+	}
+	return IsPresent;
+	
 }
 
 
@@ -121,10 +155,18 @@ set<const GraphEdge*> Graph::GetOutwardEdgesFrom(nodekey_t node) const
 	}
 
 
-
+	// need to redeclare gnFrom?
 	set<const GraphEdge*> result = set<const GraphEdge*>();
 	// TODO:
 	// iterate over this->adjList.at(idx); and find nodes that match the given node
+	for(size_t i =0; i < this->adjList.at(idx).size(); i ++){
+		//set up the edge?
+		const GraphEdge* edge = this->adjList.at(idx).at(i); //need to set up?
+		if(edge->from == node){ //should abbrevate to ge->from and use same idea as Add::... or no b/c not given parameters 
+			result.insert(edge);
+		}
+		
+	}
 	// in their "from" field, put those nodes in result
 
 
@@ -135,6 +177,13 @@ set<const GraphEdge*> Graph::GetOutwardEdgesFrom(nodekey_t node) const
 {
 	// TODOL
 	// iterate of this->nodes, accumulate into a set<nodekey_t> and return it
+	set<nodekey_t> GetNodesReturned;
+	for(size_t i =0; i <this->nodes.size(); i++){
+		//allowed to use .insert() on a set<...> ? https://cplusplus.com/reference/set/set/insert/
+		GetNodesReturned.insert(this->nodes.at(i));
+	}
+	return GetNodesReturned;
+	
 }
 
 
@@ -209,6 +258,15 @@ string Graph::EdgesToString() const
 Graph::~Graph() {
 	// TODO:
 	// Right now the memory leaks are bad, I need to
-	// implement something here to fix it
+	// implement something here to fix it -- valgrind built into remote right?
+	//Declared like this: vector<vector<GraphEdge *> > adjList
+	for(vector<GraphEdge*>& item: adjList){
+		for(GraphEdge* edge:item){
+			delete edge; //one by one then
+		}
+
+	}
+	//there's still vectors but theyre empty so...
+	adjList.clear();
 }
 

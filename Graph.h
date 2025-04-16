@@ -4,6 +4,7 @@
 #include <iostream>
 #include <set>
 #include <climits>
+#include <vector>
 
 
 using namespace std;
@@ -58,6 +59,9 @@ class Graph{
 	
 	private:
 		// TODO:
+		//init. nodes and adjList
+		vector<nodekey_t>nodes;
+		vector<vector<GraphEdge*> > adjList;
 		// put your code here!
 	
 };
