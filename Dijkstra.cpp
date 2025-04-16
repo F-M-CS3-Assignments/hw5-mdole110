@@ -32,7 +32,7 @@ int dijkstra(nodekey_t start, nodekey_t end, const Graph *g){
     BPQNode startBPQNode;
     startBPQNode.gnode = start;
     startBPQNode.pri = 0;
-    shortestPathQueue.push(startBPQNode);
+    shortestPathQueue.push(startBPQNode);https://cplusplus.com/reference/queue/queue/push/
     //bool endREACHED = false; USING WHEN THE SHORTESTPATHQUEUE IS EMPTY INSTEAD 
     //init a vector with all of the costs and nodes
     vector<int> costs(g->Size()+1 , INT_MAX); // now the vector looks like this : [INT_MAX, INT_MAX, INT_MAX, ... for whole graph]
@@ -76,13 +76,13 @@ int dijkstra(nodekey_t start, nodekey_t end, const Graph *g){
             nodekey_t neighborNode = edge->to; //from graph.cpp
             int cost = edge->weight;//from graph.cpp set up
             //compare costs of what it takes to get to the currenet node + edge to neighbor vs the already known lowest cost path to the neighbor ...aka have u found a lower cost pasth
-            int UpdatedCost = costs[currentNodeKey] + cost; //cost here is the edge to the neighbor 
-            if(UpdatedCost < costs[neighborNode] ){ //aka path to neighbor thru current not < alr known best path to neighbornode
-                costs[neighborNode] = UpdatedCost; //set the cost of the neighbor node to tyhe updated cost (cost of path thru the current node...lower cost)
+            int CheapestCost = costs[currentNodeKey] + cost; //cost here is the edge to the neighbor 
+            if(CheapestCost < costs[neighborNode] ){ //aka path to neighbor thru current not < alr known best path to neighbornode
+                costs[neighborNode] = CheapestCost; //set the cost of the neighbor node to tyhe updated cost (cost of path thru the current node...lower cost)
                 //now make a BPQNode of the neighbor to push onto the queue 
                 BPQNode BPQNeighborNode;
                 BPQNeighborNode.gnode = neighborNode;
-                BPQNeighborNode.pri = UpdatedCost;
+                BPQNeighborNode.pri = CheapestCost;
                 //now add to the queue 
                 shortestPathQueue.push(BPQNeighborNode);
                 // and say that it was visited 
